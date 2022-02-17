@@ -12,7 +12,7 @@ class ProductServices
   end
 
   def calculateProductionDay
-    (60 / @product.production_time) * @parameter.hours_worked_day
+   (60 / @product.production_time) * @parameter.hours_worked_day
   end
 
   def calculateProductionMonth
