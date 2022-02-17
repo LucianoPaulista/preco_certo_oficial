@@ -3,7 +3,6 @@ class ProductServices
     options.each do |k, v|
       instance_variable_set("@#{k}", v) unless v.nil?
     end
-    @product_time = 0
   end
 
   def calculateCustRawMaterial
@@ -13,16 +12,29 @@ class ProductServices
   end
 
   def calculateProductionDay
-    @product_item = (60 / @product.production_time) * @paramater.workded_day
+    (60 / @product.production_time) * @parameter.hours_worked_day
   end
 
   def calculateProductionMonth
-    @product_item * @paramater.worked_day
+    calculateProductionDay * @parameter.worked_days_month
   end
 
-  pro_labore { 1200.00 }
-  worked_days_month { 21 }
-  hours_worked_day { 6 }
+  def calculateManPower
+    '%.4f' % (@parameter.pro_labore / calculateProductionMonth).round(4)
+  end
 
+  def calculateFixedExpenseProduct
+    total_fixed_expense = FixedExpenseServices.new(fixedExpenses: @fixed_expense).calculateFixedExpense
+    '%.4f' % (total_fixed_expense / calculateProductionMonth)
+  end
+
+  def calculatePriceProduct
+    cust_mp = calculateCustRawMaterial
+    cust_mo = calculateManPower
+    cust_fixed_expense = calculateFixedExpenseProduct
+    markup_multiplicator = MarkupServices.new(markup_item: @markup_item).calculateMakup
+    vr_custo = (cust_mp.to_f + cust_mo.to_f + cust_fixed_expense.to_f) * markup_multiplicator.to_f
+    '%.2f' % vr_custo
+  end
 
 end

@@ -9,6 +9,8 @@ RSpec.describe FixedExpense, type: :model do
 
       expect(ProductServices.new(product_item: product_item).calculateCustRawMaterial).to eq(1.8)
 
+
+
     end
   end
 end
