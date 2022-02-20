@@ -1,13 +1,11 @@
 class FixedExpenseServices
-  def initialize(**options)
-    options.each do |k, v|
-      instance_variable_set("@#{k}", v) unless v.nil?
-    end
+  def initialize(options = { fixed_expenses: nil })
+    @options = options
   end
 
-  def calculateFixedExpense
+  def calculate_fixed_expense
     vr = 0
-    @fixedExpenses.each { | item | vr = vr + item.value }
+    @options[:fixed_expenses].each { | item | vr = vr + item.value }
     vr
   end
 end

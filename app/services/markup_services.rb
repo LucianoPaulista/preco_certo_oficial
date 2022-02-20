@@ -1,13 +1,11 @@
 class MarkupServices
-  def initialize (**options)
-    options.each do |k, v|
-      instance_variable_set("@#{k}", v) unless v.nil?
-    end
+  def initialize (options = { markup_item: nil })
+    @options = options
   end
 
-  def calculateMakup
+  def calculate_markup
     vr = 0
-    @markup_item.each { | item | vr = vr + item.percentage }
+    @options[:markup_item].each { | item | vr = vr + item.percentage }
     1 / ((100 - vr)/100)
   end
 end
