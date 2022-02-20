@@ -11,28 +11,40 @@ RSpec.describe ProductServices, type: :model do
     let(:markup) { create(:markup, description: "Venda pelo Mercado Livre") }
     let(:markup_item)  { create_list(:markup_item, 10, description: "Frete", percentage: 8.00, markup_id: markup.id) }
 
-    it 'calcular custo materia-prima' do
-      expect(ProductServices.new(product_item: product_item).calculateCustRawMaterial).to eq(1.8)
+    it 'calcular custo materia-prima no valor de R$ 18.00' do
+      raw_material = { product_item: product_item }
+      result = ProductServices.new(raw_material).calculate_cust_raw_material
+      expect(result).to eq(1.8)
     end
 
-    it 'calcular produção dia' do
-      expect(ProductServices.new(product: product, parameter: parameter).calculateProductionDay).to eq(225)
+    it 'calcular produção dia com tempo de produção de 1,6 e passando parâmetros' do
+      products = { product: product, parameter: parameter}
+      result = ProductServices.new(products ).calculate_production_day
+      expect(result).to eq(225.00)
     end
 
     it 'calcular produção mês' do
-      expect(ProductServices.new(product: product, parameter: parameter).calculateProductionMonth).to eq(4725)
+      products = { product: product, parameter: parameter}
+      result = ProductServices.new(products ).calculate_production_month
+      expect(result).to eq(4725)
     end
 
     it 'calcular custo de mão-de-obra do produto' do
-      expect(ProductServices.new(product: product, parameter: parameter).calculateManPower).to eq( '%.4f' % 0.2540)
+      products = { product: product, parameter: parameter}
+      result = ProductServices.new(products ).calculate_man_power
+      expect(result).to eq(0.2540)
     end
 
     it 'calcular despesa do produto' do
-      expect(ProductServices.new(product: product, parameter: parameter, fixed_expense: fixed_expense).calculateFixedExpenseProduct).to eq( '%.4f' % 0.2116)
+      products = { product: product, parameter: parameter, fixed_expense: fixed_expense }
+      result = ProductServices.new(products ).calculate_fixed_expense_product
+      expect(result).to eq(0.2116)
     end
 
     it 'calcular custo do produto' do
-      expect(ProductServices.new(product: product, product_item: product_item, markup_item: markup_item,  parameter: parameter, fixed_expense: fixed_expense).calculatePriceProduct).to eq( '%.2f' % 11.33)
+      products =   { product: product, product_item: product_item, markup_item: markup_item,  parameter: parameter, fixed_expense: fixed_expense }
+      result = ProductServices.new(products).calculate_price_product
+      expect(result).to eq(11.33)
     end
 
   end
